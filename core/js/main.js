@@ -1,7 +1,7 @@
 function initialAppScrollEventListener () {
   document.addEventListener('scroll', function () {
     triggerTargetSectionAnimation();
-    handleScrollToTopButtonVisible();
+    toggleScrollToTopButtonVisible();
   });
 }
 
@@ -71,22 +71,31 @@ function initialCherishSection2ndSubSectionMediaGallery () {
 
 function initialCherishSection3rdSubSectionMediaGallery () {
   const mediaInfoList = [
-    { desc: '中年轉職：５個關鍵思維，幫你提高職場身價', url: 'https://www.cheers.com.tw/article/article.action?id=5101197' },
-    { desc: '退休時太太過世，連水餃都不會煮！７９歲前外商主管李益恭：白領如何找新工作？販賣２０％的專業就好', url: 'https://www.cw.com.tw/aging/article/5126920' }
-  ];
-  initialCherishSectionMediaGallery(2, 'cherish-section-subsection-3-media-gallery', mediaInfoList);
-}
-
-function initialCherishSection4thSubSectionMediaGallery () {
-  const mediaInfoList = [
     { desc: '工作與自由可兼得？開創「斜槓」人生必備的４大能力', url: 'https://www.cheers.com.tw/article/article.action?id=5101445' },
     { desc: '彈性多元選擇 安麗提供新世代展現的舞台！', url: 'https://www.cw.com.tw/article/5121856' },
     { desc: '數位支持 助你成功創業、持續成長', url: 'https://web.amway.com.tw/business/business-tools/?utm_source=OFFICIAL_SITE&utm_medium=bo_index_intro&utm_content=tool' }
   ];
-  initialCherishSectionMediaGallery(3, 'cherish-section-subsection-4-media-gallery', mediaInfoList);
+  initialCherishSectionMediaGallery(2, 'cherish-section-subsection-3-media-gallery', mediaInfoList);
 }
 
-function handleScrollToTopButtonVisible () {
+function toggleLoadingMaskVisible (visible) {
+  const bodyElem = document.querySelector('body');
+  const loadingMaskElem = document.querySelector('.loading-mask');
+  if (bodyElem && loadingMaskElem) {
+    if (visible) {
+      bodyElem.classList.add('scroll-lockup');
+      loadingMaskElem.classList.add('loading-mask--active');
+    } else {
+      loadingMaskElem.classList.add('loading-mask--anim');
+      setTimeout(() => {
+        bodyElem.classList.remove('scroll-lockup');
+        loadingMaskElem.classList.remove('loading-mask--active');
+      }, 1500);
+    }
+  }
+}
+
+function toggleScrollToTopButtonVisible () {
   const btnElem = document.querySelector('.scroll-to-top-btn');
   const secondSectionOffsetTop = document.querySelector('.cogitation').offsetTop;
   if (window.scrollY >= secondSectionOffsetTop) {
@@ -151,14 +160,14 @@ function triggerTargetSectionAnimation () {
   if (previewedSectionNameList.includes('cogitation')) {
     const titleElem = document.querySelector('.cogitation__title');
     const titleElemTopPos = titleElem.getBoundingClientRect().top + window.scrollY;
-    const descElems = document.querySelectorAll('.cogitation__scope-content p');
+    const descElems = document.querySelectorAll('.cogitation__scope-desc');
     if (windowBottomPos >= titleElemTopPos && !titleElem.classList.contains('cogitation__title--active')) {
       titleElem.classList.add('cogitation__title--active');
     }
     Array.from(descElems).forEach((elem) => {
       const elemTopPos = elem.getBoundingClientRect().top + window.scrollY;
-      if (windowBottomPos >= elemTopPos && !elem.parentNode.classList.contains('cogitation__scope-content--active')) {
-        elem.parentNode.classList.add('cogitation__scope-content--active');
+      if (windowBottomPos >= elemTopPos && !elem.classList.contains('cogitation__scope-desc--active')) {
+        elem.classList.add('cogitation__scope-desc--active');
       }
     });
   }
@@ -167,17 +176,12 @@ function triggerTargetSectionAnimation () {
     const titleElemTopPos = titleElem.getBoundingClientRect().top + window.scrollY;
     const descElem = document.querySelector('.join__desc');
     const descElemTopPos = descElem.getBoundingClientRect().top + window.scrollY;
-    const mobileDescElem = document.querySelector('.join__mobile-desc');
-    const mobileDescElemTopPos = mobileDescElem.getBoundingClientRect().top + window.scrollY;
     const mediaItemElems = document.querySelectorAll('.join__media-item');
     if (windowBottomPos >= titleElemTopPos && !titleElem.classList.contains('join__title--active')) {
       titleElem.classList.add('join__title--active');
     }
     if (windowBottomPos >= descElemTopPos && !descElem.classList.contains('join__desc--active')) {
       descElem.classList.add('join__desc--active');
-    }
-    if (windowBottomPos >= mobileDescElemTopPos && !mobileDescElem.classList.contains('join__mobile-desc--active')) {
-      mobileDescElem.classList.add('join__mobile-desc--active');
     }
     Array.from(mediaItemElems).forEach((elem) => {
       const elemTopPos = elem.getBoundingClientRect().top + window.scrollY;
@@ -194,7 +198,7 @@ function triggerTargetSectionAnimation () {
     const titleElemTopPos = titleElem.getBoundingClientRect().top + window.scrollY;
     const descElem = document.querySelector('.podcast__desc');
     const descElemTopPos = descElem.getBoundingClientRect().top + window.scrollY;
-    const mediaElem = document.querySelector('.podcast__media');
+    const mediaElem = document.querySelector('.podcast__media-item-cover');
     const mediaElemTopPos = mediaElem.getBoundingClientRect().top + window.scrollY;
     if (windowBottomPos >= titleElemTopPos && !titleElem.classList.contains('podcast__title--active')) {
       titleElem.classList.add('podcast__title--active');
@@ -202,8 +206,8 @@ function triggerTargetSectionAnimation () {
     if (windowBottomPos >= descElemTopPos && !descElem.classList.contains('podcast__desc--active')) {
       descElem.classList.add('podcast__desc--active');
     }
-    if (windowBottomPos >= mediaElemTopPos && !mediaElem.classList.contains('podcast__media--active')) {
-      mediaElem.classList.add('podcast__media--active');
+    if (windowBottomPos >= mediaElemTopPos && !mediaElem.classList.contains('podcast__media-item-cover--active')) {
+      mediaElem.classList.add('podcast__media-item-cover--active');
     }
   }
   if (previewedSectionNameList.includes('cherish')) {
@@ -243,14 +247,20 @@ function toggleMobileMenu (active) {
   }
 }
 
-function openMediaModal (sourceUrl) {
+function openMediaModal (event, sectionName) {
   const bodyElem = document.querySelector('body');
+  const mediaItemElem = event.target.closest(`.${sectionName}__media-item`);
   const mediaModalElem = document.querySelector('.media-modal');
-  if (bodyElem && mediaModalElem) {
+  if (bodyElem && mediaItemElem && mediaModalElem) {
     const iframeElem = mediaModalElem.querySelector('iframe');
-    if (iframeElem) iframeElem.setAttribute('src', sourceUrl);
-    bodyElem.classList.add('scroll-lockup');
-    mediaModalElem.classList.add('media-modal--active');
+    const sourceUrl = mediaItemElem.dataset.mediaSourceUrl;
+    if (iframeElem && sourceUrl) {
+      iframeElem.setAttribute('src', sourceUrl);
+      bodyElem.classList.add('scroll-lockup');
+      mediaModalElem.classList.add('media-modal--active');
+    } else {
+      openComingSoonModal();
+    }
   }
 }
 
@@ -262,6 +272,24 @@ function closeMediaModal () {
     if (iframeElem) iframeElem.removeAttribute('src');
     bodyElem.classList.remove('scroll-lockup');
     mediaModalElem.classList.remove('media-modal--active');
+  }
+}
+
+function openComingSoonModal () {
+  const bodyElem = document.querySelector('body');
+  const comingSoonModalElem = document.querySelector('.coming-soon-modal');
+  if (bodyElem && comingSoonModalElem) {
+    bodyElem.classList.add('scroll-lockup');
+    comingSoonModalElem.classList.add('coming-soon-modal--active');
+  }
+}
+
+function closeComingSoonModal () {
+  const bodyElem = document.querySelector('body');
+  const comingSoonModalElem = document.querySelector('.coming-soon-modal');
+  if (bodyElem && comingSoonModalElem) {
+    bodyElem.classList.remove('scroll-lockup');
+    comingSoonModalElem.classList.remove('coming-soon-modal--active');
   }
 }
 
@@ -287,9 +315,11 @@ document.addEventListener('DOMContentLoaded', function () {
   initialMarquee('cherish-section-subsection-1-marquee', 3000);
   initialMarquee('cherish-section-subsection-2-marquee', 3000);
   initialMarquee('cherish-section-subsection-3-marquee', 3000);
-  initialMarquee('cherish-section-subsection-4-marquee', 3000);
   initialCherishSection1stSubSectionMediaGallery();
   initialCherishSection2ndSubSectionMediaGallery();
   initialCherishSection3rdSubSectionMediaGallery();
-  initialCherishSection4thSubSectionMediaGallery();
+});
+
+window.addEventListener('load', function () {
+  toggleLoadingMaskVisible(false);
 });
