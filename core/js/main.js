@@ -28,7 +28,7 @@ function initialCherishSectionMediaGallery (subSectionIndex, mediaGalleryId, med
   new Swiper(`#${mediaGalleryId}`, {
     loop: true,
     effect: 'fade',
-    speed: 1000,
+    speed: 350,
     autoplay: {
       delay: 3000
     },
