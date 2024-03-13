@@ -54,6 +54,7 @@ function initialCherishSectionMediaGallery (subSectionIndex, mediaGalleryId, med
 
 function initialCherishSection1stSubSectionMediaGallery () {
   const mediaInfoList = [
+    { desc: '欸先別說這個了，我就問，你真的有好好了解過安麗嗎？', url: 'https://www.juksy.com/article/118640' },
     { desc: '安麗全球核心高層齊聚台灣，推廣全方位健康幸福理念', url: 'https://www.cw.com.tw/article/5127971' },
     { desc: '安麗推廣大健康永續理念 致力成為地球永續推手', url: 'https://www.cw.com.tw/article/5126778' }
   ];
