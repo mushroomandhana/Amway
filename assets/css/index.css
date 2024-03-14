@@ -1851,12 +1851,6 @@ html {
         display: flex;
         flex-direction: row;
         align-items: center; }
-        #main-page .podcast__desc p:nth-child(2)::before {
-          content: '';
-          width: 60px;
-          height: 1px;
-          background-color: #62625A;
-          margin-right: .625rem; }
     #main-page .podcast__desc--pc, #main-page .podcast__desc--mobile {
       display: flex;
       flex-direction: column;
@@ -2130,7 +2124,8 @@ html {
       top: 55%;
       right: 51.5%; }
     #main-page .podcast__desc p:nth-child(1), #main-page .podcast__desc p:nth-child(2) {
-      width: 70%;
+      /* width: 70%; */
+      width: 158%;
       margin-left: auto; }
     #main-page .podcast__desc p:nth-child(3) {
       margin-top: 1.875rem; }
